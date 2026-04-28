@@ -1,0 +1,158 @@
+[gd_scene load_steps=22 format=2]
+
+[ext_resource path="res://game/subscene/mob_up.tscn" type="PackedScene" id=1]
+[ext_resource path="res://game/subscene/mob_down.tscn" type="PackedScene" id=2]
+[ext_resource path="res://game/subscene/Player.tscn" type="PackedScene" id=3]
+[ext_resource path="res://game/scripts/game.gd" type="Script" id=4]
+[ext_resource path="res://game/img/bg/bg.png" type="Texture" id=5]
+[ext_resource path="res://game/img/bg/line1.png" type="Texture" id=6]
+[ext_resource path="res://game/img/bg/line2.png" type="Texture" id=7]
+[ext_resource path="res://game/subscene/life_line.tscn" type="PackedScene" id=8]
+[ext_resource path="res://game/subscene/HUD.tscn" type="PackedScene" id=9]
+[ext_resource path="res://game/subscene/patrol_line.tscn" type="PackedScene" id=10]
+[ext_resource path="res://game/scripts/collateral1.gd" type="Script" id=11]
+[ext_resource path="res://game/scripts/collateral2.gd" type="Script" id=12]
+[ext_resource path="res://game/subscene/Markup.tscn" type="PackedScene" id=13]
+[ext_resource path="res://game/subscene/Repair_Kit.tscn" type="PackedScene" id=14]
+[ext_resource path="res://game/subscene/Petrol.tscn" type="PackedScene" id=15]
+
+[sub_resource type="RectangleShape2D" id=1]
+extents = Vector2( 2, 240 )
+
+[sub_resource type="RectangleShape2D" id=2]
+extents = Vector2( 2, 240 )
+
+[sub_resource type="Curve2D" id=3]
+_data = {
+"points": PoolVector2Array( 0, 0, 0, 0, 363, 490, 0, 0, 0, 0, 457, 490 )
+}
+
+[sub_resource type="Curve2D" id=4]
+_data = {
+"points": PoolVector2Array( 0, 0, 0, 0, 207, -14, 0, 0, 0, 0, 289, -14 )
+}
+
+[sub_resource type="Curve2D" id=5]
+_data = {
+"points": PoolVector2Array( 0, 0, 0, 0, 207, -5, 0, 0, 0, 0, 288, -6, 0, 0, 0, 0, 375, -6, 0, 0, 0, 0, 456, -6 )
+}
+
+[sub_resource type="Curve2D" id=6]
+_data = {
+"points": PoolVector2Array( 0, 0, 0, 0, 208, -10, 0, 0, 0, 0, 455, -10 )
+}
+
+[node name="game" type="Node2D"]
+script = ExtResource( 4 )
+
+[node name="Bg" type="Sprite" parent="."]
+position = Vector2( 278, 218 )
+texture = ExtResource( 5 )
+offset = Vector2( 74.5, 22 )
+
+[node name="left_line" type="KinematicBody2D" parent="."]
+position = Vector2( -13, -3 )
+script = ExtResource( 11 )
+
+[node name="Line1" type="Sprite" parent="left_line"]
+position = Vector2( 182, 127 )
+scale = Vector2( 1, 1.03448 )
+texture = ExtResource( 6 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="left_line"]
+visible = false
+position = Vector2( 178, 245 )
+shape = SubResource( 1 )
+
+[node name="HUD" parent="left_line" instance=ExtResource( 9 )]
+
+[node name="right_line" type="KinematicBody2D" parent="."]
+position = Vector2( 2, 2 )
+script = ExtResource( 12 )
+
+[node name="Line2" type="Sprite" parent="right_line"]
+position = Vector2( 497, 125 )
+scale = Vector2( 1, 1.07623 )
+texture = ExtResource( 7 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="right_line"]
+visible = false
+position = Vector2( 495, 238 )
+shape = SubResource( 2 )
+
+[node name="Player" parent="." instance=ExtResource( 3 )]
+position = Vector2( 342, 437 )
+z_index = 1
+
+[node name="mob_up" parent="." groups=["all_mob"] instance=ExtResource( 1 )]
+position = Vector2( 456, 520 )
+
+[node name="mob_down" parent="." groups=["all_mob"] instance=ExtResource( 2 )]
+position = Vector2( 208, -40 )
+
+[node name="Repair_Kit" parent="." instance=ExtResource( 14 )]
+position = Vector2( 295, -27 )
+
+[node name="Petrol" parent="." instance=ExtResource( 15 )]
+position = Vector2( 375, -28 )
+
+[node name="life_line" parent="." instance=ExtResource( 8 )]
+
+[node name="patrol_line" parent="." instance=ExtResource( 10 )]
+position = Vector2( -22, 0 )
+
+[node name="Markup" parent="." instance=ExtResource( 13 )]
+position = Vector2( 52, -4 )
+
+[node name="MobUp_Path" type="Path2D" parent="."]
+curve = SubResource( 3 )
+
+[node name="MobUp_SpawnLocation" type="PathFollow2D" parent="MobUp_Path"]
+position = Vector2( 363, 490 )
+
+[node name="MobD_Path" type="Path2D" parent="."]
+curve = SubResource( 4 )
+
+[node name="MobD_SpawnLocation" type="PathFollow2D" parent="MobD_Path"]
+position = Vector2( 207, -14 )
+
+[node name="RK_Path" type="Path2D" parent="."]
+position = Vector2( 0, -20 )
+curve = SubResource( 5 )
+
+[node name="RK_SpawnLocation" type="PathFollow2D" parent="RK_Path"]
+position = Vector2( 207, -5 )
+rotation = -0.0123449
+
+[node name="Petrol_Path" type="Path2D" parent="."]
+curve = SubResource( 6 )
+
+[node name="Petrol_SpawnLocation" type="PathFollow2D" parent="Petrol_Path"]
+position = Vector2( 208, -10 )
+
+[node name="MobUp_Timer" type="Timer" parent="."]
+wait_time = 2.1
+autostart = true
+
+[node name="MobD_Timer" type="Timer" parent="."]
+wait_time = 1.7
+autostart = true
+
+[node name="RK_Timer" type="Timer" parent="."]
+wait_time = 5.0
+autostart = true
+
+[node name="Petrol_Timer" type="Timer" parent="."]
+wait_time = 5.0
+autostart = true
+
+[node name="Label" type="Label" parent="."]
+margin_left = 582.0
+margin_top = 82.0
+margin_right = 700.0
+margin_bottom = 118.0
+
+[connection signal="timeout" from="MobUp_Timer" to="." method="_on_MobTimer_timeout"]
+[connection signal="timeout" from="MobD_Timer" to="." method="_on_MobD_Timer_timeout"]
+[connection signal="timeout" from="RK_Timer" to="." method="_on_RK_Timer_timeout"]
+[connection signal="timeout" from="Petrol_Timer" to="." method="_on_Petrol_Timer_timeout"]
